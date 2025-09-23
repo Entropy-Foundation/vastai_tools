@@ -1,0 +1,12 @@
+# Environment variables with API keys
+.env
+
+# macOS
+.DS_Store
+
+# Editor files
+.vscode/
+.claude/
+
+# Logs
+*.log
