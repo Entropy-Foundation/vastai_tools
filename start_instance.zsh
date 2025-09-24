@@ -50,7 +50,7 @@ pip install --no-cache-dir vllm
 
 # Start the vLLM server
 echo 'Launching vLLM OpenAI-compatible server...'
-python -m vllm.entrypoints.openai.api_server \\
+python3 -m vllm.entrypoints.openai.api_server \\
   --model ISTA-DASLab/gemma-3-27b-it-GPTQ-4b-128g \\
   --max-model-len 32768 \\
   --tensor-parallel-size 1 \\
