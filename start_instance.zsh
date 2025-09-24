@@ -55,8 +55,7 @@ python3 -m vllm.entrypoints.openai.api_server \\
   --max-model-len 32768 \\
   --tensor-parallel-size 1 \\
   --host 0.0.0.0 \\
-  --port 8080 \\
-  --trust-remote-code
+  --port 8080
 
 echo 'vLLM server started on port 8080'
 "
