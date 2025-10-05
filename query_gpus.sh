@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 # Query VastAI for RTX 5090 single GPU servers
 # Sorted by price (lowest first)
@@ -44,7 +44,8 @@ done
 
 echo ""
 echo "Usage:"
-echo "  ./start_instance.zsh <offer_id>    # Create instance from offer"
-echo "  ./list_instances.zsh              # List your current instances"
+echo "  ./start_llm_instance.sh <offer_id>      # Create LLM-ready instance"
+echo "  ./start_minimal_instance.sh <offer_id>  # Create minimal Ubuntu instance"
+    echo "  ./list_instances.sh               # List your current instances"
 echo ""
-echo "Example: ./start_instance.zsh $( echo "$offers" | jq -r 'sort_by(.dph_total) | .[0].id' )"
+echo "Example: ./start_llm_instance.sh $( echo "$offers" | jq -r 'sort_by(.dph_total) | .[0].id' )"

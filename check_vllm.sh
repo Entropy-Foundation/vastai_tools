@@ -1,10 +1,10 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # Checks whether the vLLM server is responding on a Vast.ai instance
 set -euo pipefail
 
 print_usage() {
   cat <<'USAGE'
-Usage: check_vllm.zsh <instance-id> [path-to-public-key]
+Usage: check_vllm.sh <instance-id> [path-to-public-key]
 
 Attaches the default Vast.ai SSH key (or the provided path), retrieves the
 instance's SSH connection info, and probes http://127.0.0.1:8080/health over SSH

@@ -1,13 +1,14 @@
-#!/usr/bin/env zsh
-# Attaches an SSH key to a Vast.ai instance and opens an SSH session
+#!/usr/bin/env bash
+# Copies a local file to a Vast.ai instance using scp
 set -euo pipefail
 
 print_usage() {
   cat <<'USAGE'
-Usage: ssh_instance.zsh <instance-id> [path-to-public-key]
+Usage: scp_instance.sh <instance-id> <local-file>
 
-Attaches the specified SSH public key (defaults to ~/.ssh/id_supra.pub) to the
-Vast.ai instance and starts an SSH session using the matching private key.
+Attaches the default Vast.ai SSH public key (from ~/.ssh/id_supra.pub), retrieves
+connection info via the Vast.ai CLI, then copies the given file to the instance's
+/root directory using scp.
 USAGE
 }
 
@@ -16,8 +17,20 @@ if (( $# == 0 )) || [[ ${1:-} == "-h" ]] || [[ ${1:-} == "--help" ]]; then
   exit $(( $# == 0 ? 1 : 0 ))
 fi
 
+if (( $# != 2 )); then
+  echo 'Error: script expects exactly two arguments.' >&2
+  print_usage
+  exit 1
+fi
+
 instance_id=$1
-pub_key_path=${2:-"$HOME/.ssh/id_supra.pub"}
+local_file=$2
+pub_key_path="$HOME/.ssh/id_supra.pub"
+
+if [[ ! -f $local_file ]]; then
+  printf 'Error: local file not found at %s\n' "$local_file" >&2
+  exit 1
+fi
 
 if [[ -f .env ]]; then
   source .env
@@ -85,5 +98,8 @@ if [[ -z $host ]] || [[ -z $port ]]; then
   exit 1
 fi
 
-echo "Connecting to $user@$host on port $port..."
-exec ssh -i "$private_key_path" -p "$port" "$user@$host"
+remote_name=${local_file##*/}
+remote_target="/root/$remote_name"
+
+echo "Copying $local_file to $user@$host:$remote_target (port $port)..."
+scp -i "$private_key_path" -P "$port" "$local_file" "$user@$host:$remote_target"

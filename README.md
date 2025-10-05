@@ -1,6 +1,6 @@
 # VastAI Management Scripts
 
-Simple zsh scripts for managing VastAI GPU instances with vLLM server deployment.
+Simple shell scripts for managing VastAI GPU instances with vLLM server deployment.
 
 ## Prerequisites
 
@@ -22,25 +22,31 @@ Then edit `.env` with your actual keys:
 
 ### Check Account Balance
 ```bash
-./check_balance.zsh
+./check_balance.sh
 ```
 Shows account information, credit balance, and recent billing history.
 
 ### Find RTX 5090 Offers
 ```bash
-./query_gpus.zsh
+./query_gpus.sh
 ```
 Lists available RTX 5090 single GPU servers sorted by price (lowest first).
 
-### Create Instance
+### Create LLM Instance
 ```bash
-./start_instance.zsh <offer_id>
+./start_llm_instance.sh <offer_id>
 ```
 Creates a new instance with vLLM server running Gemma-3-27b model on port 8080.
 
+### Create Minimal Instance
+```bash
+./start_minimal_instance.sh <offer_id>
+```
+Launches a lightweight Ubuntu 22.04 environment with only the host NVIDIA drivers available (no CUDA toolkit or vLLM setup). Perfect for custom runtimes or manual installs.
+
 ### List Your Instances
 ```bash
-./list_instances.zsh
+./list_instances.sh
 ```
 Shows all your running instances with status and connection info.
 
@@ -48,16 +54,20 @@ Shows all your running instances with status and connection info.
 
 ```bash
 # 1. Check your account balance
-./check_balance.zsh
+./check_balance.sh
 
 # 2. Find available GPU offers
-./query_gpus.zsh
+./query_gpus.sh
 
 # 3. Create instance from an offer (use ID from step 2)
-./start_instance.zsh 26128186
+# LLM-ready environment
+./start_llm_instance.sh 26128186
+
+# Minimal barebones environment
+./start_minimal_instance.sh 26128186
 
 # 4. Monitor your instances
-./list_instances.zsh
+./list_instances.sh
 
 # 5. Connect to vLLM server
 # Once running, the server will be available at:

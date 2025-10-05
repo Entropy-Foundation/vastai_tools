@@ -1,10 +1,10 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # Adds an SSH public key to Vast.ai using the CLI
 set -euo pipefail
 
 print_usage() {
   cat <<'USAGE'
-Usage: add_ssh_key.zsh [path-to-public-key]
+Usage: add_ssh_key.sh [path-to-public-key]
 
 Reads the given SSH public key (defaults to ~/.ssh/id_supra.pub) and uploads it to Vast.ai
 using the CLI command `vastai create ssh-key`.

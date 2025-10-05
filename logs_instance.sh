@@ -1,10 +1,10 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # Fetches logs for a Vast.ai instance with optional tail/filter parameters
 set -euo pipefail
 
 print_usage() {
   cat <<'USAGE'
-Usage: logs_instance.zsh <instance-id> [--tail N] [--filter PATTERN] [--daemon]
+Usage: logs_instance.sh <instance-id> [--tail N] [--filter PATTERN] [--daemon]
 
 Loads the Vast API key from .env, then calls `vastai logs` for the specified
 instance. Optional flags:

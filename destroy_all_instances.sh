@@ -1,10 +1,10 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # Destroy every active VastAI instance after a safety confirmation prompt.
 set -euo pipefail
 
 print_usage() {
   cat <<'USAGE'
-Usage: destroy_all_instances.zsh [--yes]
+Usage: destroy_all_instances.sh [--yes]
 
 Fetches all VastAI instance IDs and issues `vastai destroy instance <id>` for
 each one. Prompts for confirmation unless `--yes` is supplied.
@@ -45,7 +45,7 @@ if ! raw_instances=$(vastai show instances --raw 2>&1); then
 fi
 
 if ! id_output=$(
-  print -r -- "$raw_instances" | python3 -c "import json, sys
+  printf '%s' "$raw_instances" | python3 -c "import json, sys
 try:
     data = json.load(sys.stdin)
 except json.JSONDecodeError as exc:
@@ -59,10 +59,14 @@ for item in (data or []):
   exit 1
 fi
 
-typeset -a instance_ids
-instance_ids=(${(f)id_output})
+instance_ids=()
+while IFS= read -r inst_id; do
+  if [[ -n $inst_id ]]; then
+    instance_ids+=("$inst_id")
+  fi
+done <<< "$id_output"
 
-if (( ${#instance_ids} == 0 )); then
+if (( ${#instance_ids[@]} == 0 )); then
   echo 'No instances found.'
   exit 0
 fi
@@ -74,15 +78,15 @@ done
 
 if [[ $force == false ]]; then
   printf 'Destroy all listed instances? [y/N]: '
-  if ! read -q; then
-    echo
+  IFS= read -r response
+  echo
+  if [[ $response != "y" && $response != "Y" ]]; then
     echo 'Aborted.'
     exit 1
   fi
-  echo
 fi
 
-typeset -a failed
+failed=()
 for inst_id in "${instance_ids[@]}"; do
   printf 'Destroying instance %s...\n' "$inst_id"
   if ! vastai destroy instance "$inst_id"; then
@@ -91,7 +95,7 @@ for inst_id in "${instance_ids[@]}"; do
   fi
 done
 
-if (( ${#failed} > 0 )); then
+if (( ${#failed[@]} > 0 )); then
   echo 'Completed with errors.' >&2
   echo 'Instances that could not be destroyed:' >&2
   for inst_id in "${failed[@]}"; do
